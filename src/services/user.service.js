@@ -2,19 +2,11 @@ import api from './api';
 
 class UserService {
   getPublicContent() {
-    return api.get('/test/all');
+    return api.get('/');
   }
 
   getUserBoard() {
-    return api.get('/test/user');
-  }
-
-  getModeratorBoard() {
-    return api.get('/test/mod');
-  }
-
-  getAdminBoard() {
-    return api.get('/test/admin');
+    return api.get('/api/user');
   }
 }
 

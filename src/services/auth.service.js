@@ -9,7 +9,9 @@ class AuthService {
         password
       })
       .then((response) => {
+          console.log(response);
         if (response.data.accessToken) {
+          console.log(response)
           TokenService.setUser(response.data);
         }
 
@@ -22,11 +24,18 @@ class AuthService {
   }
 
   register({ username, email, password }) {
-    return api.post("/auth/signup", {
-      username,
-      email,
-      password
-    });
+    return api
+        .post("/auth/signup", {
+          username,
+          email,
+          password
+        }).then((response) => {
+          if (response.data.accessToken) {
+            console.log(response)
+            TokenService.setUser(response.data);
+          }
+          return response.data;
+        });
   }
 }
 

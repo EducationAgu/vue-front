@@ -1,13 +1,16 @@
 import axiosInstance from "./api";
 import TokenService from "./token.service";
+import AuthService from './auth.service';
+
+import router from "../router";
 
 const setup = (store) => {
   axiosInstance.interceptors.request.use(
     (config) => {
       const token = TokenService.getLocalAccessToken();
       if (token) {
-        // config.headers["Authorization"] = 'Bearer ' + token;  // for Spring Boot back-end
-        config.headers["x-access-token"] = token; // for Node.js Express back-end
+        config.headers["Authorization"] = token;  // for Spring Boot back-end
+        // config.headers["x-access-token"] = token; // for Node.js Express back-end
       }
       return config;
     },
@@ -40,9 +43,21 @@ const setup = (store) => {
 
             return axiosInstance(originalConfig);
           } catch (_error) {
-            return Promise.reject(_error);
+            await AuthService.logout()
+            setTimeout(function () {
+              router.replace({
+                path: '/Login'
+              })
+            }, 0);
           }
         }
+
+        await AuthService.logout()
+        setTimeout(function () {
+          router.replace({
+            path: '/Login'
+          })
+        }, 0);
       }
 
       return Promise.reject(err);
