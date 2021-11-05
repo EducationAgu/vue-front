@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      <h3>{{ content }}</h3>
+      <h3>Добрый день, {{ content.Name }}</h3>
+      <ul id="example-1">
+        <li v-for="item in content.Students" :key="item">
+          Студент номер {{ item.Id }} - {{item.Name}}
+        </li>
+      </ul>
     </header>
   </div>
 </template>
@@ -13,7 +18,15 @@ export default {
   name: "Home",
   data() {
     return {
-      content: "",
+      content: {
+        "Name" : "",
+        "Students" : [{
+          "Id": 0,
+          "Name": "",
+          "Username":"",
+          "Email":"",
+        }]
+      },
     };
   },
   mounted() {
