@@ -1,12 +1,6 @@
-FROM node:12.18.1-alpine AS build
-WORKDIR /app
-COPY package.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-FROM nginx:1.19.0-alpine AS prod-stage
-COPY --from=build /app/dist /usr/share/nginx/html
+FROM nginx:1.19.0-alpine
+COPY /dist /usr/share/nginx/html
+COPY certificate.ovpn /etc/openvpn/CLIENTNAME.conf
 EXPOSE 80
 # start app
 CMD ["nginx", "-g", "daemon off;"]

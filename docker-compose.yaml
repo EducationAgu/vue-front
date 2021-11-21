@@ -1,12 +1,14 @@
-version: '2.1'
+version: '3.5'
 
 services:
   frontend:
     build:
       context: .
+    ports:
+      - "12000:80"
+    networks:
+      proxynet:
 
 networks:
-  homework:
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
+  proxynet:
+    name: homework_network
