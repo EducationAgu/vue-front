@@ -2,13 +2,22 @@ version: '3.5'
 
 services:
   frontend:
-    build:
-      context: .
+    image: nginx:1.19.0
+    restart: unless-stopped
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+      - ./dist:/usr/share/nginx/html
     ports:
-      - "12000:80"
-    networks:
-      proxynet:
+      - "80:80"
+      - "433:433"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
-networks:
-  proxynet:
-    name: homework_network
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
