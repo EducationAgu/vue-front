@@ -1,8 +1,12 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      Буков Александр
-      <img src="../assets/ekAyaO0Doz4.jpg">
+      <h3>Добрый день, {{ content.Name }}</h3>
+      <ul id="example-1">
+        <li v-for="item in content.Students" :key="item">
+          Студент номер {{ item.Id }} - {{item.Name}}
+        </li>
+      </ul>
     </header>
   </div>
 </template>
