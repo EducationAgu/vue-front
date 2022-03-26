@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 
 class AuthService {
   login({ username, password }) {
-      api.get("/auth/salt").then((response)=>{
+      return api.get("/auth/salt").then((response)=>{
           const hash = bcrypt.hashSync(password, response.data)
                   return api
                       .post("/auth/signin", {
