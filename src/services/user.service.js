@@ -1,12 +1,12 @@
 import api from './api';
 
 class UserService {
-  getPublicContent() {
-    return api.get('/');
+  getPublicContent({skip},{take}) {
+    return api.post('/', {skip: skip, take: take});
   }
 
-  searchContacts({searchP}, {filter}) {
-    return api.post("/", {searchP: searchP, filter:filter})
+  searchContacts({searchP}, {filter}, {skip},{take} ) {
+    return api.post("/", {searchP: searchP, filter:filter, skip: skip, take: take})
   }
 
   getUserBoard({userUC}) {

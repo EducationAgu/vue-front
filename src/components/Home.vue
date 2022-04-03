@@ -15,7 +15,13 @@
         <h3>Добрый день, {{ content.Name }}</h3>
       </div>
       <div>
-        <input type="checkbox" v-model="filter.favOnly" @click="search">Избранное
+        <input type="checkbox" @click="toggleFav">Избранное
+      </div>
+
+      <div v-if="content.Total > 10">
+        <button v-if="paging.skip > 0" @click="changePage(-1)"> ← </button>
+
+        <button v-if="paging.skip < content.Total" @click="changePage(1)"> → </button>
       </div>
       <ul id="example-1">
         <li v-for="item in content.Students" :key="item">
@@ -42,6 +48,7 @@ export default {
     return {
       content: {
         "Name" : "",
+        "Total": 0,
         "Students" : [{
           "Id": 0,
           "Name": "",
@@ -59,11 +66,15 @@ export default {
       },
       filter: {
         favOnly: false,
+      },
+      paging: {
+        take: 10,
+        skip: 0,
       }
     };
   },
   mounted() {
-    UserService.getPublicContent().then(
+    UserService.getPublicContent({skip: this.paging.skip}, {take: this.paging.take}).then(
       (response) => {
         this.content = response.data;
       },
@@ -78,8 +89,17 @@ export default {
     );
   },
   methods: {
+    toggleFav() {
+      this.filter.favOnly = !this.filter.favOnly;
+      this.search()
+    },
     search() {
-      UserService.searchContacts({searchP: this.formData.sp},{filter: !this.filter.favOnly}).then(
+      UserService.searchContacts(
+          {searchP: this.formData.sp},
+          {filter: this.filter.favOnly},
+          {skip: this.paging.skip},
+          {take: this.paging.take}
+      ).then(
           (resp) => {
             this.content = resp.data;
           },
@@ -107,7 +127,22 @@ export default {
     addToFav: function (UC) {
       UserService.addToFav({userUC: UC}).then()
     },
-  }
+    changePage: function (direction){
+      // -1 - prev 1 - next
+      if (direction === -1) {
+          this.paging.skip -= 10;
+          if (this.paging.skip < 0) {
+            this.paging.skip  = 0
+          }
+      } else if (direction === 1) {
+        this.paging.skip += 10;
+        if (this.paging.skip > this.content.Total) {
+          this.paging.skip  = this.content.Total-10
+        }
+      }
+      this.search();
+    },
+  },
 };
 </script>
 
