@@ -29,6 +29,7 @@ const routes = [
     name: "profile",
     // lazy-loaded
     component: Profile,
+    props:true
   },
   {
     path: "/user",

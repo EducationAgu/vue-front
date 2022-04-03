@@ -5,18 +5,20 @@ const bcrypt = require('bcryptjs')
 class AuthService {
   login({ username, password }) {
       return api.get("/auth/salt").then((response)=>{
+
           const hash = bcrypt.hashSync(password, response.data)
-                  return api
-                      .post("/auth/signin", {
-                          username,
-                          "password": hash,
-                      }).then((response) => {
-                          console.log(response)
-                          if (response.data.accessToken) {
-                              TokenService.setUser(response.data);
-                          }
-                          return response.data;
-                      });
+          return api
+              .post("/auth/signin",
+                  {
+                      username,
+                      "password": hash,
+                    })
+              .then((response) => {
+                  if (response.data.accessToken) {
+                      TokenService.setUser(response.data);
+                  }
+                  return response.data;
+              });
       })
   }
 

@@ -5,8 +5,16 @@ class UserService {
     return api.get('/');
   }
 
-  getUserBoard() {
-    return api.get('/api/user');
+  searchContacts({searchP}, {filter}) {
+    return api.post("/", {searchP: searchP, filter:filter})
+  }
+
+  getUserBoard({userUC}) {
+    return api.post('/user', {"uc": userUC});
+  }
+
+  addToFav({userUC}) {
+    return api.post('/user/addToFav', {"uc": userUC});
   }
 }
 

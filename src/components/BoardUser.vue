@@ -18,7 +18,7 @@ export default {
     };
   },
   mounted() {
-    UserService.getUserBoard().then(
+    UserService.getUserBoard("").then(
       (response) => {
         this.content = response.data;
       },
